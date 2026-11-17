@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anagha R · Cyber Forensics &amp; Network Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS: edit these to retheme ===== */
+:root{
+  --bg:#070b12; --bg-2:#0d1420; --panel:#111a2a; --line:#22314a;
+  --text:#e6edf7; --muted:#9fb0c8; --accent:#2ef2c0; --accent-2:#5aa2ff; --warn:#ffb454;
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-mono:"Fira Code",ui-monospace,Consolas,monospace;
+  --fs-hero:clamp(2.6rem,8vw,6rem); --fs-h2:clamp(1.8rem,4vw,2.8rem); --fs-body:clamp(1rem,1.1vw,1.08rem);
+  --space:clamp(1rem,3vw,2rem); --section:clamp(4rem,10vw,8rem); --radius:14px;
+}
+@media (prefers-color-scheme: dark){:root{color-scheme:dark}}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:4.5rem;height:auto}
+body{background:var(--bg);color:var(--text);font:400 var(--fs-body)/1.65 var(--font-display);overflow-x:hidden;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(rgba(46,242,192,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,242,192,.05) 1px,transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(ellipse at 50% 20%,#000 20%,transparent 75%)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,100% - 2*var(--space));margin-inline:auto}
+section{padding-block:var(--section)}
+h2{font-size:var(--fs-h2);line-height:1.1;letter-spacing:-.02em;margin-bottom:var(--space)}
+.mono{font-family:var(--font-mono)}
+.sr{position:absolute;left:-9999px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:20;background:rgba(7,11,18,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:3.6rem}
+.mono-logo{font:500 1rem var(--font-mono);text-decoration:none;color:var(--accent)}
+nav ul{display:flex;gap:clamp(.8rem,2.5vw,2rem);list-style:none;padding:0}
+nav ul a{text-decoration:none;color:var(--muted);font-size:.95rem;transition:color .2s}
+nav ul a:hover{color:var(--text)}
+@media(max-width:600px){nav ul{gap:.7rem}nav ul a{font-size:.82rem}}
+
+/* HERO + 3D */
+.hero{padding-block:clamp(3rem,8vw,6rem);min-height:calc(100vh - 3.6rem);display:flex;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--space);align-items:center}
+@media(max-width:820px){.hero .wrap{grid-template-columns:1fr}}
+.status{font:400 .85rem var(--font-mono);color:var(--accent);margin-bottom:1rem}
+.status::before{content:"";display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--accent);margin-right:.6rem;box-shadow:0 0 10px var(--accent)}
+h1{font-size:var(--fs-hero);line-height:.98;letter-spacing:-.04em}
+.role{font:400 clamp(1rem,2vw,1.25rem) var(--font-mono);color:var(--accent-2);margin:1rem 0}
+.lede{max-width:52ch;color:var(--muted);margin-bottom:2rem}
+.btns{display:flex;flex-wrap:wrap;gap:.8rem}
+.btn{display:inline-block;padding:.85rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:700;border:1px solid var(--accent);transition:transform .2s,box-shadow .2s,background .2s}
+.btn.p{background:var(--accent);color:#04120d}
+.btn.p:hover{box-shadow:0 0 24px rgba(46,242,192,.45);transform:translateY(-2px)}
+.btn.s{color:var(--accent)}
+.btn.s:hover{background:rgba(46,242,192,.1);transform:translateY(-2px)}
+.stage{perspective:900px;display:grid;place-items:center;height:clamp(240px,40vw,380px)}
+.cube{--s:clamp(120px,18vw,180px);width:var(--s);height:var(--s);position:relative;transform-style:preserve-3d;animation:spin 18s linear infinite;
+  transform:rotateX(-20deg) rotateY(var(--ry,0deg))}
+.cube i{position:absolute;inset:0;border:1.5px solid var(--accent);background:rgba(46,242,192,.06);display:grid;place-items:center;
+  font:500 clamp(.7rem,1.3vw,.9rem) var(--font-mono);color:var(--accent);font-style:normal;box-shadow:inset 0 0 30px rgba(46,242,192,.15)}
+.cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}
+.cube i:nth-child(2){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(3){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
+@keyframes spin{to{transform:rotateX(-20deg) rotateY(360deg)}}
+
+/* PROJECTS */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space);perspective:1200px}
+.card{grid-column:span 6;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;
+  transform-style:preserve-3d;transition:transform .15s ease-out,border-color .2s,box-shadow .2s;will-change:transform}
+.card:first-child{grid-column:span 12}
+.card:hover{border-color:var(--accent);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px rgba(46,242,192,.12)}
+@media(max-width:760px){.card,.card:first-child{grid-column:span 12}}
+/* SCREENSHOT SLOT: replace the .vis background with <img src="your-shot.png" alt="..."> inside .vis */
+.vis{aspect-ratio:16/7;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.vis img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.v1{background:radial-gradient(circle at 20% 30%,rgba(46,242,192,.5),transparent 45%),repeating-linear-gradient(90deg,rgba(90,162,255,.25) 0 2px,transparent 2px 28px),#0a1626}
+.v2{background:conic-gradient(from 200deg at 70% 60%,#0a1626,rgba(255,180,84,.4),#0a1626 60%),#0a1626}
+.v3{background:linear-gradient(135deg,transparent 40%,rgba(90,162,255,.5) 40% 42%,transparent 42%),linear-gradient(45deg,rgba(46,242,192,.3),transparent 60%),#0a1626}
+.v4{background:repeating-linear-gradient(135deg,rgba(46,242,192,.18) 0 10px,transparent 10px 24px),radial-gradient(circle at 80% 20%,rgba(90,162,255,.5),transparent 50%),#0a1626}
+.card .body{padding:clamp(1.1rem,2.5vw,1.6rem);display:flex;flex-direction:column;gap:.8rem;flex:1;transform:translateZ(30px)}
+.card h3{font-size:1.3rem;letter-spacing:-.01em}
+.pce{display:grid;gap:.35rem;color:var(--muted);font-size:.95rem}
+.pce b{color:var(--text);font-family:var(--font-mono);font-weight:500;font-size:.82rem;margin-right:.4rem}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;list-style:none;padding:0}
+.pills li{font:400 .78rem var(--font-mono);padding:.2rem .6rem;border:1px solid var(--line);border-radius:99px;color:var(--accent-2)}
+.links{display:flex;gap:1.2rem;margin-top:auto;padding-top:.4rem;font-size:.92rem}
+.links a{color:var(--accent);text-underline-offset:4px}
+.links a:hover{color:var(--text)}
+.also{margin-top:var(--space);color:var(--muted);font-size:.95rem}
+
+/* TIMELINE */
+.tl{border-left:2px solid var(--line);padding-left:clamp(1rem,3vw,2rem);margin-left:.4rem;position:relative}
+.tl article{position:relative;max-width:70ch}
+.tl article::before{content:"";position:absolute;left:calc(-1*clamp(1rem,3vw,2rem) - 7px);top:.5rem;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.tl time{font:400 .85rem var(--font-mono);color:var(--accent)}
+.tl h3{font-size:1.35rem;margin:.2rem 0}
+.tl p{color:var(--muted)}
+.edu{margin-top:2.5rem;display:grid;gap:.9rem;max-width:70ch}
+.edu div{padding:1rem 1.2rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-2)}
+.edu span{display:block;color:var(--muted);font-size:.92rem}
+
+/* SKILLS */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space)}
+.skills div{padding:1.3rem;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);transition:border-color .2s,transform .2s}
+.skills div:hover{border-color:var(--accent-2);transform:translateY(-3px)}
+.skills h3{font:500 .95rem var(--font-mono);color:var(--accent);margin-bottom:.7rem}
+.skills ul{list-style:none;padding:0;display:grid;gap:.35rem;color:var(--muted)}
+.certs{margin-top:var(--space);display:grid;gap:.6rem;color:var(--muted);list-style:none;padding:0}
+.certs li{padding-left:1.1rem;position:relative}
+.certs li::before{content:"✓";position:absolute;left:0;color:var(--accent)}
+.certs strong{color:var(--text);font-weight:500}
+
+/* ABOUT / FOOTER */
+.about p{max-width:62ch;color:var(--muted);margin-bottom:1.1rem}
+footer{border-top:1px solid var(--line);background:linear-gradient(180deg,var(--bg-2),var(--bg));padding-block:var(--section)}
+footer h2{font-size:clamp(2rem,6vw,4.2rem);letter-spacing:-.03em;max-width:16ch}
+.mail{display:inline-flex;align-items:center;gap:.8rem;margin:1.5rem 0;padding:.9rem 1.3rem;border:1px dashed var(--accent);border-radius:10px;background:rgba(46,242,192,.06);
+  color:var(--text);font:500 clamp(.95rem,2.4vw,1.3rem) var(--font-mono);cursor:pointer;transition:background .2s}
+.mail:hover{background:rgba(46,242,192,.14)}
+.mail small{color:var(--accent);font-size:.8rem}
+.soc{display:flex;flex-wrap:wrap;gap:1.4rem;list-style:none;padding:0}
+.soc a{color:var(--muted);text-underline-offset:4px}
+.soc a:hover{color:var(--accent)}
+.fine{margin-top:3rem;color:var(--muted);font-size:.85rem}
+@media(prefers-reduced-motion:reduce){.cube{animation:none}html{scroll-behavior:auto}.card{transition:none}}
+</style>
+</head>
+<body>
+<nav aria-label="Primary"><div class="wrap">
+  <a class="mono-logo" href="#top">anagha@r:~$</a>
+  <ul>
+    <li><a href="#about">About</a></li><li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
+  </ul>
+</div></nav>
+
+<main id="top">
+<header class="hero"><div class="wrap">
+  <div>
+    <p class="status">B.Sc. Cyber Forensics graduate · open to roles</p>
+    <h1>Anagha R</h1>
+    <p class="role">Cyber Forensics · Network Security</p>
+    <p class="lede">I analyse cyber threats, monitor networks and build secure solutions, from intrusion detection to DevSecOps pipelines and malware analysis. Ready to start my career in Cyber Security and Network Security.</p>
+    <div class="btns">
+      <a class="btn p" href="#projects">View Work</a>
+      <!-- SWAP: replace #resume-pdf with the path to your PDF, e.g. href="ANAGHA_R_Resume.pdf" download -->
+      <a class="btn s" href="#resume-pdf">Download Resume</a>
+    </div>
+  </div>
+  <div class="stage" aria-hidden="true"><div class="cube" id="cube"><i>NETWORK</i><i>FORENSICS</i><i>MALWARE</i><i>DEVSECOPS</i><i>CLOUD</i><i>IDS</i></div></div>
+</div></header>
+
+<section id="projects"><div class="wrap">
+  <h2>Selected projects</h2>
+  <div class="grid">
+    <article class="card">
+      <div class="vis v1" role="img" aria-label="Abstract network traffic visual"><!-- SWAP: <img src="ids.png" alt="IDS project screenshot"> --></div>
+      <div class="body">
+        <h3>Real-Time Intrusion Detection System</h3>
+        <div class="pce">
+          <span><b>Problem</b>Suspicious network traffic is hard to spot as it happens.</span>
+          <span><b>Solution</b>A CNN model trained on the NSL-KDD dataset to detect it.</span>
+          <span><b>Impact</b>Real-time detection of suspicious traffic.</span>
+        </div>
+        <ul class="pills"><li>CNN</li><li>NSL-KDD</li><li>Intrusion Detection</li></ul>
+        <div class="links"><a href="#">Live Demo</a><a href="#">Source Code</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="vis v2" role="img" aria-label="Abstract cloud security visual"></div>
+      <div class="body">
+        <h3>End-to-End AWS Cloud Security Setup</h3>
+        <div class="pce">
+          <span><b>Problem</b>Cloud environments need layered protection.</span>
+          <span><b>Solution</b>Configured IAM, monitoring and secure networking on AWS.</span>
+          <span><b>Impact</b>A complete, end-to-end secured setup.</span>
+        </div>
+        <ul class="pills"><li>AWS</li><li>IAM</li><li>Monitoring</li><li>Secure Networking</li></ul>
+        <div class="links"><a href="#">Live Demo</a><a href="#">Source Code</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="vis v3" role="img" aria-label="Abstract pipeline visual"></div>
+      <div class="body">
+        <h3>Secure DevSecOps Pipeline</h3>
+        <div class="pce">
+          <span><b>Problem</b>Security checks often come too late in delivery.</span>
+          <span><b>Solution</b>CI/CD pipelines with testing, deployment and security scans.</span>
+          <span><b>Impact</b>Security built into every build.</span>
+        </div>
+        <ul class="pills"><li>GitHub Actions</li><li>CI/CD</li><li>Security Scans</li></ul>
+        <div class="links"><a href="#">Live Demo</a><a href="#">Source Code</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="vis v4" role="img" aria-label="Abstract malware analysis visual"></div>
+      <div class="body">
+        <h3>Malware Analysis</h3>
+        <div class="pce">
+          <span><b>Problem</b>Malicious software changes systems in ways that must be understood.</span>
+          <span><b>Solution</b>Analysis with forensic tools.</span>
+          <span><b>Impact</b>Identified threats and the system changes they caused.</span>
+        </div>
+        <ul class="pills"><li>Forensic Tools</li><li>Threat Analysis</li></ul>
+        <div class="links"><a href="#">Live Demo</a><a href="#">Source Code</a></div>
+      </div>
+    </article>
+  </div>
+  <p class="also">Also built: YouTube Bot Comment Detection System, which identifies spam and automated comments. <a href="#" style="color:var(--accent)">Source Code</a></p>
+</div></section>
+
+<section id="experience"><div class="wrap">
+  <h2>Experience</h2>
+  <div class="tl">
+    <article>
+      <time datetime="2025-11">11/2025 – 01/2026</time>
+      <h3>Cyber Security Intern, Jyesta Corporate Entity</h3>
+      <p>Completed internship training in Cyber Security.</p>
+    </article>
+  </div>
+  <div class="edu">
+    <div><strong>B.Sc. Cyber Forensics, specialising in Network Security</strong><span>School of Technology and Applied Science, Edappally · MG University, Kottayam · 2023 – 2026</span></div>
+    <div><strong>Plus Two, Computer Science</strong><span>GGHSS Madappally · 2021 – 2023</span></div>
+  </div>
+</div></section>
+
+<section id="skills"><div class="wrap">
+  <h2>Skills</h2>
+  <div class="skills">
+    <div><h3>Security</h3><ul><li>Network Security Fundamentals</li><li>Ethical Hacking Concepts</li><li>Vulnerability Assessment</li></ul></div>
+    <div><h3>Systems &amp; Monitoring</h3><ul><li>Linux &amp; Windows Administration</li><li>Firewall &amp; Network Monitoring</li></ul></div>
+    <div><h3>Programming</h3><ul><li>Basic Python Programming</li></ul></div>
+    <div><h3>Working style</h3><ul><li>Analytical Thinking</li><li>Problem Solving</li><li>Team Collaboration</li><li>Fast Learner</li></ul></div>
+  </div>
+  <ul class="certs">
+    <li><strong>Penetration Testing, Threat Hunting, and Cryptography</strong>, Coursera, 2025</li>
+    <li><strong>Wi-Fi Hacking, APK Backdoor Injection, Phishing Simulation &amp; Dark Web Exploitation</strong>, Hackrealm Academy, 2025</li>
+    <li><strong>IBM Certified: Introduction to Cybersecurity Careers</strong>, Coursera, 2025</li>
+    <li><strong>Career Orientation on Cybersecurity</strong>, Technovalley Software India Private Limited, 2026</li>
+  </ul>
+</div></section>
+
+<section id="about" class="about"><div class="wrap">
+  <h2>About</h2>
+  <p>I’m a Cyber Forensics graduate from Kerala, specialising in network security. My studies and projects cover digital forensics, network monitoring and threat analysis, and I like understanding how an attack works before working out how to stop it.</p>
+  <p>Alongside coursework I’ve built an intrusion detection system, secured an AWS setup, wired security scans into a CI/CD pipeline and analysed malware. I learn fast, I’m comfortable working in a team, and I’m looking for my first role in Cyber Security or Network Security.</p>
+</div></section>
+</main>
+
+<footer id="contact"><div class="wrap">
+  <h2>Let’s talk security.</h2>
+  <button class="mail" id="copy" type="button" aria-label="Copy email address">
+    <span id="addr">anagharavi255@gmail.com</span><small id="msg" aria-live="polite">Copy</small>
+  </button>
+  <ul class="soc">
+    <li><a href="mailto:anagharavi255@gmail.com">Email</a></li>
+    <!-- SWAP: handle “Anagharofficial” appears on the resume without a platform. Add the real URL. -->
+    <li><a href="#">Anagharofficial</a></li>
+    <li><a href="#">LinkedIn</a></li>
+    <li><a href="#">GitHub</a></li>
+  </ul>
+  <p class="fine">Kerala, India · © Anagha R</p>
+</div></footer>
+
+<script>
+(function(){
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* 3D tilt on project cards */
+  if(!reduce){
+    document.querySelectorAll(".card").forEach(function(c){
+      c.addEventListener("mousemove",function(e){
+        var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+        c.style.transform="rotateY("+(x*8)+"deg) rotateX("+(-y*8)+"deg) translateZ(6px)";
+      });
+      c.addEventListener("mouseleave",function(){c.style.transform=""});
+    });
+  }
+  /* Copy email */
+  var b=document.getElementById("copy"),m=document.getElementById("msg"),t=document.getElementById("addr").textContent;
+  b.addEventListener("click",function(){
+    function ok(){m.textContent="Copied";setTimeout(function(){m.textContent="Copy"},1800)}
+    try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}
+    function fb(){var s=document.createRange();s.selectNodeContents(document.getElementById("addr"));var g=getSelection();g.removeAllRanges();g.addRange(s);m.textContent="Press Ctrl+C"}
+  });
+})();
+</script>
+</body>
+</html>
